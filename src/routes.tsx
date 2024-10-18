@@ -14,12 +14,16 @@ import StudentDashboardb from "./pages/StudentDashboardb";
 import TeacherDashboard from "./pages/TeacherDashboard";
 import AssignmentResultsPage from "./pages/AssignmentResultsPage";
 import StudentDashboardc from "./pages/StudentDashboardc";
+import ManagerDashboard from "./pages/ManagerDashboard";
+import AdminDashboard from "./pages/AdminDashboard";
 
 const router = createBrowserRouter([
   { path: "/", element: <App></App> },
   { path: "/login", element: <LogIn></LogIn> },
   { path: "/signup", element: <SignUp></SignUp> },
   { path: "/dashboard", element: <Dashboard></Dashboard> },
+  { path: "/manager", element: <ManagerDashboard /> },
+  { path: "/admin", element: <AdminDashboard /> },
   {
     path: "/student-dashboardb",
     element: <StudentDashboardb></StudentDashboardb>,
