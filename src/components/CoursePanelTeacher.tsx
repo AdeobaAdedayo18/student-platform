@@ -138,7 +138,7 @@ const CoursePanelTeacher = () => {
                   >
                     <Text
                       fontSize="xs"
-                      color={useColorModeValue("white", "gray.800")}
+                      color={useColorModeValue("", "gray.800")}
                     >
                       {course.duration}
                     </Text>

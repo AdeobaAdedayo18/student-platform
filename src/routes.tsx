@@ -16,6 +16,8 @@ import AssignmentResultsPage from "./pages/AssignmentResultsPage";
 import StudentDashboardc from "./pages/StudentDashboardc";
 import ManagerDashboard from "./pages/ManagerDashboard";
 import AdminDashboard from "./pages/AdminDashboard";
+import ManagerDashboardb from "./pages/ManagerDashboardb";
+import TeacherDashboardb from "./pages/TeacherDashboardb";
 
 const router = createBrowserRouter([
   { path: "/", element: <App></App> },
@@ -23,6 +25,7 @@ const router = createBrowserRouter([
   { path: "/signup", element: <SignUp></SignUp> },
   { path: "/dashboard", element: <Dashboard></Dashboard> },
   { path: "/manager", element: <ManagerDashboard /> },
+  { path: "/managerb", element: <ManagerDashboardb /> },
   { path: "/admin", element: <AdminDashboard /> },
   {
     path: "/student-dashboardb",
@@ -32,14 +35,15 @@ const router = createBrowserRouter([
     path: "/student-dashboard",
     element: <StudentDashboard></StudentDashboard>,
   },
-  {
-    path: "/student-dashboardc",
-    element: <StudentDashboardc></StudentDashboardc>,
-  },
+
   { path: "/forgot-password", element: <ForgotPassword></ForgotPassword> },
   {
     path: "/teacher-dashboard",
     element: <TeacherDashboard></TeacherDashboard>,
+  },
+  {
+    path: "/teacher-dashboardb",
+    element: <TeacherDashboardb></TeacherDashboardb>,
   },
   {
     path: "/student-course",

@@ -41,7 +41,7 @@ interface User {
 
 const schema = z.object({
   name: z.string().min(1, { message: "This field is required" }),
-  userType: z.string().min(1, { message: "This field is required" }),
+  userType: z.string(),
   email: z.string().min(1, { message: "This field is required" }),
 });
 
@@ -60,6 +60,11 @@ const AdminDashboard: React.FC = () => {
     reset,
     formState: { errors },
   } = useForm<FormData>({ resolver: zodResolver(schema) });
+  const onSubmit = (data: FormData) => {
+    console.log(data);
+    handleAddUser();
+    reset();
+  };
   const toast = useToast();
 
   const bgColor = useColorModeValue("white", "gray.800");
@@ -121,48 +126,71 @@ const AdminDashboard: React.FC = () => {
           <TabPanels>
             <TabPanel>
               <VStack align="stretch" spacing={6}>
-                <Flex>
-                  <Input
-                    placeholder="Name"
-                    value={newUser.name}
-                    onChange={(e) =>
-                      setNewUser({ ...newUser, name: e.target.value })
-                    }
-                    mr={2}
-                    size="lg"
-                  />
-                  <Input
-                    placeholder="Email"
-                    value={newUser.email}
-                    onChange={(e) =>
-                      setNewUser({ ...newUser, email: e.target.value })
-                    }
-                    mr={2}
-                    size="lg"
-                  />
-                  <Select
-                    value={newUser.role}
-                    onChange={(e) =>
-                      setNewUser({
-                        ...newUser,
-                        role: e.target.value as "teacher" | "student",
-                      })
-                    }
-                    mr={2}
-                    size="lg"
-                  >
-                    <option value="student">Student</option>
-                    <option value="teacher">Teacher</option>
-                  </Select>
-                  <Button
-                    colorScheme="teal"
-                    onClick={handleAddUser}
-                    size="lg"
-                    width={"100%"}
-                  >
-                    Add User
-                  </Button>
-                </Flex>
+                <form action="" onSubmit={handleSubmit(onSubmit)}>
+                  <Flex gap={2}>
+                    <Flex width={"100%"} flexDirection={"column"}>
+                      <Input
+                        placeholder="Name"
+                        {...register("name")}
+                        value={newUser.name}
+                        onChange={(e) =>
+                          setNewUser({ ...newUser, name: e.target.value })
+                        }
+                        mr={2}
+                        size="lg"
+                      />
+                      {errors.name && (
+                        <p style={{ fontSize: "14px", color: "red" }}>
+                          {errors.name.message}
+                        </p>
+                      )}
+                    </Flex>
+
+                    <Flex width={"100%"} flexDirection={"column"}>
+                      <Input
+                        {...register("email")}
+                        type="email"
+                        placeholder="Email"
+                        value={newUser.email}
+                        onChange={(e) =>
+                          setNewUser({ ...newUser, email: e.target.value })
+                        }
+                        mr={2}
+                        size="lg"
+                      />
+                      {errors.email && (
+                        <p style={{ fontSize: "14px", color: "red" }}>
+                          {errors.email.message}
+                        </p>
+                      )}
+                    </Flex>
+
+                    <Select
+                      value={newUser.role}
+                      {...register("userType")}
+                      onChange={(e) =>
+                        setNewUser({
+                          ...newUser,
+                          role: e.target.value as "teacher" | "student",
+                        })
+                      }
+                      mr={2}
+                      size="lg"
+                    >
+                      <option value="student">Student</option>
+                      <option value="teacher">Teacher</option>
+                    </Select>
+                    <Button
+                      colorScheme="teal"
+                      size="lg"
+                      width={"100%"}
+                      type="submit"
+                    >
+                      Add User
+                    </Button>
+                  </Flex>
+                </form>
+
                 <Button
                   as="label"
                   htmlFor="file-upload"

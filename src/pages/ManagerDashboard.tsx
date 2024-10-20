@@ -40,6 +40,16 @@ import {
   FaBuilding,
   FaCreditCard,
 } from "react-icons/fa";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod/dist/zod.js";
+import { useForm } from "react-hook-form";
+
+const schema = z.object({
+  name: z.string().min(1, { message: "This field is required" }),
+  email: z.string().min(1, { message: "This field is required" }),
+});
+
+type FormData = z.infer<typeof schema>;
 
 const ManagerDashboard: React.FC = () => {
   const [admins, setAdmins] = useState<string[]>([]);
@@ -47,6 +57,18 @@ const ManagerDashboard: React.FC = () => {
   const [institutionName, setInstitutionName] = useState("");
   const { isOpen, onOpen, onClose } = useDisclosure();
   const toast = useToast();
+
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<FormData>({ resolver: zodResolver(schema) });
+  const onSubmit = (data: FormData) => {
+    console.log(data);
+    handleAddAdmin();
+    reset();
+  };
 
   const bgColor = useColorModeValue("white", "gray.800");
   const headerColor = useColorModeValue("purple.600", "purple.300");
@@ -113,22 +135,48 @@ const ManagerDashboard: React.FC = () => {
           <TabPanels>
             <TabPanel>
               <VStack align="stretch" spacing={6}>
-                <Flex>
-                  <Input
-                    placeholder="Enter admin email"
-                    value={newAdmin}
-                    onChange={(e) => setNewAdmin(e.target.value)}
-                    mr={2}
-                    size="lg"
-                  />
-                  <Button
-                    colorScheme="purple"
-                    onClick={handleAddAdmin}
-                    size="lg"
-                  >
-                    Add Admin
-                  </Button>
-                </Flex>
+                <form action="" onSubmit={handleSubmit(onSubmit)}>
+                  <Flex gap={2}>
+                    <Flex width={"100%"} flexDirection={"column"}>
+                      <Input
+                        placeholder="Enter admin email"
+                        type="email"
+                        {...register("email")}
+                        value={newAdmin}
+                        onChange={(e) => setNewAdmin(e.target.value)}
+                        mr={2}
+                        size="lg"
+                      />
+                      {errors.email && (
+                        <p style={{ fontSize: "14px", color: "red" }}>
+                          {errors.email.message}
+                        </p>
+                      )}
+                    </Flex>
+
+                    <Flex width={"100%"} flexDirection={"column"}>
+                      <Input
+                        placeholder="name"
+                        {...register("name")}
+                        mr={2}
+                        size="lg"
+                      />
+                      {errors.name && (
+                        <p style={{ fontSize: "14px", color: "red" }}>
+                          {errors.name.message}
+                        </p>
+                      )}
+                    </Flex>
+                    <Button
+                      colorScheme="purple"
+                      width={"100%"}
+                      size="lg"
+                      type="submit"
+                    >
+                      Add Admin
+                    </Button>
+                  </Flex>
+                </form>
                 <Button
                   as="label"
                   htmlFor="file-upload"

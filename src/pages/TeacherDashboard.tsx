@@ -41,30 +41,6 @@ const TeacherDashboard = () => {
   const headingColor = useColorModeValue("purple.600", "purple.300");
 
   // Mock data (replace with actual data fetching in the future)
-  const courses = [
-    { id: 1, title: "Introduction to React", students: 25 },
-    { id: 2, title: "Advanced Python", students: 15 },
-  ];
-
-  const assessments = [
-    {
-      id: 1,
-      title: "React Basics Quiz",
-      course: "Introduction to React",
-      dueDate: "2023-06-30",
-    },
-    {
-      id: 2,
-      title: "Python Project",
-      course: "Advanced Python",
-      dueDate: "2023-07-15",
-    },
-  ];
-
-  const students = [
-    { id: 1, name: "John Doe", course: "Introduction to React", grade: 85 },
-    { id: 2, name: "Jane Smith", course: "Advanced Python", grade: 92 },
-  ];
 
   const renderProfile = () => (
     <Card bg={cardBg}>
