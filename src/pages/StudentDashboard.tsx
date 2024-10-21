@@ -30,7 +30,9 @@ const StudentDashboard = () => {
   const bgColor = useColorModeValue("gray.50", "gray.700");
   const headingColor = useColorModeValue("purple.600", "purple.300");
   const tabBgColor = useColorModeValue("gray.200", "gray.800");
-
+  if (bgColor === null || headingColor === null || tabBgColor === null) {
+    return null;
+  }
   const sidebarWidth = { base: "70px", md: "200px" };
 
   return (

@@ -43,7 +43,7 @@ const schema = z
     description: z.string().optional(),
     instructorSolution: z.string().optional(),
     codeArea: z.string().optional(),
-    questionArea: z.string().optional(),
+    question: z.string().min(1, "Question is required"),
     useAiGrading: z.boolean(),
     aiGradingOption: z.string().optional(),
     maxScore: z.number().min(0).max(100),
@@ -149,7 +149,7 @@ const CreateAssignmentPage: React.FC = () => {
         <VStack spacing={8} as="form" onSubmit={handleSubmit(onSubmit)}>
           <Heading color={accentColor}>Create New Assignment</Heading>
 
-          <FormControl isInvalid={!!errors.title}>
+          <FormControl>
             <FormLabel htmlFor="title" color={textColor}>
               Assignment Title
             </FormLabel>
@@ -184,7 +184,26 @@ const CreateAssignmentPage: React.FC = () => {
             />
           </FormControl>
 
-          <FormControl isInvalid={!!errors.instructorSolution}>
+          <FormControl>
+            <FormLabel htmlFor="question" color={textColor}>
+              Question
+            </FormLabel>
+            <Textarea
+              id="question"
+              placeholder="Enter questions or additional instructions"
+              {...register("question")}
+              bg={inputBg}
+              borderColor={inputBorder}
+              _hover={{ borderColor: accentColor }}
+              color={textColor}
+            />
+            {errors.question && (
+              <p style={{ fontSize: "14px", color: "red" }}>
+                {errors.question.message}
+              </p>
+            )}
+          </FormControl>
+          <FormControl>
             <FormLabel htmlFor="instructorSolution" color={textColor}>
               Instructor Solution
             </FormLabel>
@@ -202,36 +221,6 @@ const CreateAssignmentPage: React.FC = () => {
                 {errors.instructorSolution.message}
               </p>
             )}
-          </FormControl>
-
-          <FormControl>
-            <FormLabel htmlFor="codeArea" color={textColor}>
-              Code Area
-            </FormLabel>
-            <Textarea
-              id="codeArea"
-              placeholder="Enter starter code or instructions"
-              {...register("codeArea")}
-              bg={inputBg}
-              borderColor={inputBorder}
-              _hover={{ borderColor: accentColor }}
-              color={textColor}
-            />
-          </FormControl>
-
-          <FormControl>
-            <FormLabel htmlFor="questionArea" color={textColor}>
-              Question Area
-            </FormLabel>
-            <Textarea
-              id="questionArea"
-              placeholder="Enter questions or additional instructions"
-              {...register("questionArea")}
-              bg={inputBg}
-              borderColor={inputBorder}
-              _hover={{ borderColor: accentColor }}
-              color={textColor}
-            />
           </FormControl>
 
           <Divider borderColor={inputBorder} />

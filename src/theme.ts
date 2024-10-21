@@ -1,9 +1,10 @@
 import { extendTheme, ThemeConfig } from "@chakra-ui/react";
-
+// Use server side rendering to know what mode light mode or dark mode
 const config: ThemeConfig = {
-  initialColorMode: 'dark',
-  
+  initialColorMode: "light",
+  useSystemColorMode: false,
 }
+
 
 const colors = {
   brand: {

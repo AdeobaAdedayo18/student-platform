@@ -13,10 +13,9 @@ import StudentDashboard from "./pages/StudentDashboard";
 import StudentDashboardb from "./pages/StudentDashboardb";
 import TeacherDashboard from "./pages/TeacherDashboard";
 import AssignmentResultsPage from "./pages/AssignmentResultsPage";
-import StudentDashboardc from "./pages/StudentDashboardc";
 import ManagerDashboard from "./pages/ManagerDashboard";
 import AdminDashboard from "./pages/AdminDashboard";
-import ManagerDashboardb from "./pages/ManagerDashboardb";
+import ManagerDashboardb from "./pages/ManagerDashboard";
 import TeacherDashboardb from "./pages/TeacherDashboardb";
 
 const router = createBrowserRouter([

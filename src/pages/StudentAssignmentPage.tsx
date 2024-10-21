@@ -18,7 +18,7 @@ import {
 } from "@chakra-ui/react";
 import { FaPlay, FaClock, FaSave, FaQuestion, FaCode } from "react-icons/fa";
 
-const StudentAssignmentPage: React.FC = () => {
+const StudentAssignmentPage = () => {
   const [code, setCode] = useState("// Write your code here");
   const bgColor = useColorModeValue("gray.50", "gray.800");
   const cardBg = useColorModeValue("white", "gray.700");
@@ -27,8 +27,8 @@ const StudentAssignmentPage: React.FC = () => {
   // Mock data (replace with actual data from API)
   const assignment = {
     title: "React Component Implementation",
-    description:
-      "Create a functional React component that displays a list of items.",
+    description: "Assigment 1",
+    question: "Write a program that calculates the sum of 1 to 100 ",
     dueDate: "2023-12-31T23:59:59",
     timeRemaining: "5 days, 3 hours, 45 minutes",
     isOverdue: false,
@@ -51,6 +51,7 @@ const StudentAssignmentPage: React.FC = () => {
           <Flex justifyContent="space-between" alignItems="center">
             <VStack align="start" spacing={2}>
               <Heading size="xl">{assignment.title}</Heading>
+              <Text size={"md"}>{assignment.description}</Text>
               <HStack>
                 <Badge colorScheme={assignment.isOverdue ? "red" : "green"}>
                   {assignment.isOverdue ? "Overdue" : "Open"}
@@ -117,9 +118,9 @@ const StudentAssignmentPage: React.FC = () => {
             <VStack spacing={4} align="stretch">
               <Box bg={cardBg} p={4} borderRadius="md" boxShadow="sm">
                 <Heading size="md" mb={2}>
-                  Assignment Details
+                  Assessment Question
                 </Heading>
-                <Text>{assignment.description}</Text>
+                <Text>{assignment.question}</Text>
               </Box>
               <Box bg={cardBg} p={4} borderRadius="md" boxShadow="sm">
                 <Heading size="md" mb={2}>
