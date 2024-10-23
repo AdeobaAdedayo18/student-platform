@@ -1,67 +1,80 @@
 // ManagerDashboard.tsx
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
+import { useDropzone } from "react-dropzone";
+
+import { MoonIcon, SunIcon } from "@chakra-ui/icons";
 import {
+  AlertDialog,
+  AlertDialogBody,
+  AlertDialogContent,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogOverlay,
+  Avatar,
+  Badge,
   Box,
+  Button,
   Flex,
+  FormControl,
+  FormLabel,
+  HStack,
   Heading,
+  Icon,
+  Image,
+  Input,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
   Tab,
   TabList,
   TabPanel,
   TabPanels,
-  Tabs,
-  VStack,
-  Button,
-  Text,
-  Input,
-  FormControl,
-  FormLabel,
-  useToast,
   Table,
-  Thead,
+  Tabs,
   Tbody,
-  Tr,
-  Th,
   Td,
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalFooter,
-  ModalBody,
-  ModalCloseButton,
-  useDisclosure,
-  Icon,
-  useColorModeValue,
-  Badge,
-  HStack,
-  useColorMode,
+  Text,
+  Th,
+  Thead,
   Tooltip,
+  Tr,
+  VStack,
+  useColorMode,
+  useColorModeValue,
+  useDisclosure,
+  useToast,
 } from "@chakra-ui/react";
-import {
-  FaUserPlus,
-  FaFileUpload,
-  FaBuilding,
-  FaCreditCard,
-} from "react-icons/fa";
-import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod/dist/zod.js";
 import { useForm } from "react-hook-form";
-import { MoonIcon, SunIcon } from "@chakra-ui/icons";
-import { CgProfile } from "react-icons/cg";
+import { FaBuilding, FaCreditCard, FaTrash, FaUserPlus } from "react-icons/fa";
+import { z } from "zod";
+import unilog from "../assets/START YOUR CODING JOURNEY TODAY (1).svg";
+import EditManagerProfile from "../components/EditManagerProfile";
+import EditInstitutionProfile from "../components/EditInstitutionProfile";
 
 const schema = z.object({
-  name: z.string().min(1, { message: "This field is required" }),
   email: z.string().min(1, { message: "This field is required" }),
 });
 
 type FormData = z.infer<typeof schema>;
 
-const ManagerDashboardb = () => {
+const ManagerDashboard = () => {
   const { colorMode, toggleColorMode } = useColorMode();
+  const initialInstitution = {
+    logo: "https://example.com/logo.png", // Replace with an actual logo URL
+    name: "Example University",
+    phone: "+1 (123) 456-7890",
+    email: "info@exampleuniversity.edu",
+  };
   const [admins, setAdmins] = useState<string[]>([]);
   const [newAdmin, setNewAdmin] = useState("");
-  const [institutionName, setInstitutionName] = useState("");
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [adminToDelete, setAdminToDelete] = useState<string | null>(null);
+  const cancelRef = React.useRef<HTMLButtonElement>(null);
   const toast = useToast();
   const headingColor = useColorModeValue("purple.600", "purple.300");
   const sidebarWidth = { base: "70px", md: "200px" };
@@ -75,6 +88,25 @@ const ManagerDashboardb = () => {
     console.log(data);
     handleAddAdmin();
     reset();
+  };
+
+  const handleRemoveUser = (admin) => {
+    setAdminToDelete(admin);
+    setIsDeleteDialogOpen(true);
+  };
+
+  const confirmRemoveUser = () => {
+    if (adminToDelete) {
+      toast({
+        title: "Admin Successfully removed from list",
+        status: "success",
+        duration: 2000,
+        isClosable: true,
+        position: "top",
+      });
+    }
+    setIsDeleteDialogOpen(false);
+    setAdminToDelete(null);
   };
 
   const bgColor = useColorModeValue("white", "gray.800");
@@ -91,30 +123,9 @@ const ManagerDashboardb = () => {
         status: "success",
         duration: 2000,
         isClosable: true,
+        position: "top",
       });
     }
-  };
-
-  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    // Here you would handle the file upload and processing
-    toast({
-      title: "File uploaded",
-      description: "Admin list has been updated",
-      status: "success",
-      duration: 2000,
-      isClosable: true,
-    });
-  };
-
-  const handleSaveInstitutionDetails = () => {
-    // Here you would save the institution details
-    toast({
-      title: "Institution details saved",
-      status: "success",
-      duration: 2000,
-      isClosable: true,
-    });
-    onClose();
   };
 
   return (
@@ -125,9 +136,7 @@ const ManagerDashboardb = () => {
             Hello Azu
           </Heading>
           <HStack>
-            <Button variant="outline">
-              <CgProfile />
-            </Button>
+            <EditManagerProfile />
             <Button onClick={toggleColorMode} variant="outline">
               {colorMode === "light" ? <MoonIcon /> : <SunIcon />}
             </Button>
@@ -204,19 +213,6 @@ const ManagerDashboardb = () => {
                       <Flex gap={2}>
                         <Flex width={"100%"} flexDirection={"column"}>
                           <Input
-                            placeholder="name"
-                            {...register("name")}
-                            mr={2}
-                            size="lg"
-                          />
-                          {errors.name && (
-                            <p style={{ fontSize: "14px", color: "red" }}>
-                              {errors.name.message}
-                            </p>
-                          )}
-                        </Flex>
-                        <Flex width={"100%"} flexDirection={"column"}>
-                          <Input
                             placeholder="Enter admin email"
                             type="email"
                             {...register("email")}
@@ -241,34 +237,36 @@ const ManagerDashboardb = () => {
                         </Button>
                       </Flex>
                     </form>
-                    <Button
-                      as="label"
-                      htmlFor="file-upload"
-                      colorScheme="teal"
-                      size="lg"
-                      leftIcon={<Icon as={FaFileUpload} />}
-                    >
-                      Upload Admin List
-                      <input
-                        id="file-upload"
-                        type="file"
-                        style={{ display: "none" }}
-                        onChange={handleFileUpload}
-                      />
-                    </Button>
+
                     <Table variant="simple">
                       <Thead>
                         <Tr>
                           <Th>Admin Email</Th>
                           <Th>Status</Th>
+                          <Th>Action</Th>
                         </Tr>
                       </Thead>
                       <Tbody>
                         {admins.map((admin, index) => (
                           <Tr key={index}>
-                            <Td>{admin}</Td>
+                            <Td>
+                              <Flex align="center">
+                                <Avatar size="sm" name={admin} mr={2} />
+                                {admin}
+                              </Flex>
+                            </Td>
                             <Td>
                               <Badge colorScheme="green">Active</Badge>
+                            </Td>
+                            <Td>
+                              <Button
+                                colorScheme="red"
+                                size="sm"
+                                onClick={() => handleRemoveUser(admin)}
+                                leftIcon={<Icon as={FaTrash} />}
+                              >
+                                Remove
+                              </Button>
                             </Td>
                           </Tr>
                         ))}
@@ -277,10 +275,9 @@ const ManagerDashboardb = () => {
                   </VStack>
                 </TabPanel>
                 <TabPanel>
-                  <Button colorScheme="blue" onClick={onOpen} size="lg">
-                    Edit Institution Details
-                  </Button>
+                  <EditInstitutionProfile />
                 </TabPanel>
+
                 <TabPanel>
                   <Heading size="lg" mb={4}>
                     Payment Information
@@ -290,40 +287,40 @@ const ManagerDashboardb = () => {
               </TabPanels>
             </Box>
           </Tabs>
-          <Modal isOpen={isOpen} onClose={onClose} size="xl">
-            <ModalOverlay />
-            <ModalContent>
-              <ModalHeader>Edit Institution Details</ModalHeader>
-              <ModalCloseButton />
-              <ModalBody>
-                <FormControl>
-                  <FormLabel>Institution Name</FormLabel>
-                  <Input
-                    value={institutionName}
-                    onChange={(e) => setInstitutionName(e.target.value)}
-                    size="lg"
-                  />
-                </FormControl>
-                {/* Add more institution details here */}
-              </ModalBody>
-              <ModalFooter>
-                <Button
-                  colorScheme="blue"
-                  mr={3}
-                  onClick={handleSaveInstitutionDetails}
-                >
-                  Save
-                </Button>
-                <Button variant="ghost" onClick={onClose}>
-                  Cancel
-                </Button>
-              </ModalFooter>
-            </ModalContent>
-          </Modal>
         </Flex>
       </Flex>
+      <AlertDialog
+        isOpen={isDeleteDialogOpen}
+        leastDestructiveRef={cancelRef}
+        onClose={() => setIsDeleteDialogOpen(false)}
+      >
+        <AlertDialogOverlay>
+          <AlertDialogContent>
+            <AlertDialogHeader fontSize="lg" fontWeight="bold">
+              Remove Admin
+            </AlertDialogHeader>
+
+            <AlertDialogBody>
+              Are you sure you want to remove {adminToDelete}? This action
+              cannot be undone.
+            </AlertDialogBody>
+
+            <AlertDialogFooter>
+              <Button
+                ref={cancelRef}
+                onClick={() => setIsDeleteDialogOpen(false)}
+              >
+                Cancel
+              </Button>
+              <Button colorScheme="red" onClick={confirmRemoveUser} ml={3}>
+                Remove
+              </Button>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialogOverlay>
+      </AlertDialog>
     </Box>
   );
 };
 
-export default ManagerDashboardb;
+export default ManagerDashboard;
