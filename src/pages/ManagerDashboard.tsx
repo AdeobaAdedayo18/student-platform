@@ -1,6 +1,5 @@
 // ManagerDashboard.tsx
-import React, { useCallback, useState } from "react";
-import { useDropzone } from "react-dropzone";
+import React, { useState } from "react";
 
 import { MoonIcon, SunIcon } from "@chakra-ui/icons";
 import {
@@ -15,20 +14,10 @@ import {
   Box,
   Button,
   Flex,
-  FormControl,
-  FormLabel,
   HStack,
   Heading,
   Icon,
-  Image,
   Input,
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  ModalOverlay,
   Tab,
   TabList,
   TabPanel,
@@ -45,16 +34,14 @@ import {
   VStack,
   useColorMode,
   useColorModeValue,
-  useDisclosure,
   useToast,
 } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod/dist/zod.js";
 import { useForm } from "react-hook-form";
 import { FaBuilding, FaCreditCard, FaTrash, FaUserPlus } from "react-icons/fa";
 import { z } from "zod";
-import unilog from "../assets/START YOUR CODING JOURNEY TODAY (1).svg";
-import EditManagerProfile from "../components/EditManagerProfile";
 import EditInstitutionProfile from "../components/EditInstitutionProfile";
+import EditManagerProfile from "../components/EditManagerProfile";
 
 const schema = z.object({
   email: z.string().min(1, { message: "This field is required" }),
@@ -109,10 +96,7 @@ const ManagerDashboard = () => {
     setAdminToDelete(null);
   };
 
-  const bgColor = useColorModeValue("white", "gray.800");
-  const headerColor = useColorModeValue("purple.600", "purple.300");
   const tabBgColor = useColorModeValue("purple.50", "gray.700");
-  const hoverBgColor = useColorModeValue("purple.100", "gray.600");
 
   const handleAddAdmin = () => {
     if (newAdmin) {
